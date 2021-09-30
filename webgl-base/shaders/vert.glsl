@@ -1,20 +1,8 @@
-precision mediump float;
+#version 300 es
 
-attribute vec3 aPosition;
-// attribute vec2 aUv;
+in vec4 a_Position;
 
-uniform mat4 uProjection;
-uniform mat4 uModel;
-uniform mat4 uView;
+uniform mat4 u_ModelViewMatrix;
+uniform mat4 u_ProjectionMatrix;
 
-uniform float dpr;
-
-uniform float uPointSize;
-
-// varying vec2 vUv;
-
-void main() {
-    // vUv = aUv;
-    gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
-    gl_PointSize = 1.0 + dpr + uPointSize;
-}
+void main() { gl_Position = u_ProjectionMatrix * u_ModelViewMatrix * a_Position; }
