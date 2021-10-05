@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "snowpack dev --polyfill-node",
-    "build": "snowpack build --polyfill-node",
+    "start": "snowpack dev",
+    "build": "snowpack build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,16 +17,10 @@
   },
   "dependencies": {
     "canvas-fit": "^1.5.0",
-    "cga": "^1.0.8",
-    "gl-geometry": "^3.1.1",
     "gl-matrix": "^3.3.0",
     "gl-shader": "^4.3.1",
     "glslify": "^7.1.1",
-    "guf": "^1.0.3",
     "is-mobile": "^3.0.0",
-    "lgp": "^1.0.4",
-    "mda": "^1.1.1",
-    "nsc": "^1.0.2",
-    "ycam": "^1.0.2"
+    "webgl-obj-loader": "^2.0.8"
   }
 }

@@ -13,7 +13,8 @@ import fragShader from "./shaders/frag.glsl";
 
 var gl, shader;
 var camera;
-var outline;
+var outline, outlineExpanded, convexHull;
+var triangles;
 var projection = mat4.create();
 var model = mat4.create();
 var view = mat4.create();
@@ -23,6 +24,18 @@ var view = mat4.create();
 function createGeometry(gl) {
   outline = glGeometry(gl);
   outline.attr("a_position", ycam.positions, { size: 2 });
+
+  outlineExpanded = glGeometry(gl);
+  var ycamExpanded = cga.expandPolygon2(ycam.positions, 0.05);
+  outlineExpanded.attr("a_position", ycamExpanded, { size: 2 });
+
+  convexHull = glGeometry(gl);
+  convexHull.attr("aPosition", ycamExpanded, { size: 2 });
+  convexHull.faces(cga.convexHull2(ycamExpanded));
+
+  triangles = glGeometry(gl);
+  triangles.attr("aPosition", ycam.positions, { size: 2 });
+  triangles.faces(cga.triangulatePolygon2(ycam.positions));
 }
 
 function setup() {
@@ -67,13 +80,14 @@ function update(deltaTime) {
 
 /* === RENDER LOOP === */
 
-function draw() {
-  outline.bind(shader);
+function drawGeo(geo, mode, color) {
+  geo.bind(shader);
   shader.uniforms.u_projectionMatrix = projection;
   shader.uniforms.u_viewMatrix = view;
   shader.uniforms.u_modelMatrix = model;
-  outline.draw(gl.LINE_LOOP);
-  outline.unbind();
+  shader.uniforms.u_color = color;
+  geo.draw(mode);
+  geo.unbind();
 }
 
 function render(time) {
@@ -92,7 +106,11 @@ function render(time) {
   gl.depthFunc(gl.LEQUAL); // Near things obscure far things
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  draw();
+  drawGeo(outline, gl.LINE_LOOP, [0, 1, 1, 1]);
+  drawGeo(outlineExpanded, gl.LINE_LOOP, [1, 0, 0, 1]);
+  drawGeo(convexHull, gl.LINE_LOOP, [1, 1, 0, 1]);
+  drawGeo(convexHull, gl.LINE_LOOP, [1, 1, 0, 1]);
+  drawGeo(triangles, gl.LINE_LOOP, [1, 0, 1, 1]);
 
   // render loop
   requestAnimationFrame(render);
