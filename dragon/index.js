@@ -1,18 +1,16 @@
 import { downloadMeshes, initMeshBuffers } from "webgl-obj-loader";
 import createShader from "gl-shader";
 import { mat4, vec3 } from "gl-matrix";
-import isMobile from "is-mobile";
-import canvasFit from "canvas-fit";
 
 import vertShader from "./shaders/vert.glsl";
 import fragShader from "./shaders/frag.glsl";
 
-var gl, shader;
+var gl, canvas, shader;
 var dragonObject;
 var camera = {
-  verticalAngle: 0.4,
-  horizontalAngle: 0.7,
-  distance: 2.0,
+  // verticalAngle: 0.4,
+  // horizontalAngle: 0.7,
+  distance: 3.0,
   view: mat4.create(),
   projection: mat4.create(),
 };
@@ -34,16 +32,13 @@ function initObject(mesh) {
 
 function init(meshes) {
   // get a WebGL context
-  const canvas = document.body.appendChild(document.createElement("canvas"));
+  canvas = document.getElementById("gl-canvas");
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
   gl = canvas.getContext("webgl2");
   if (!gl) {
     return;
   }
-
-  // set canvas size to fill window and pixel density
-  var mobile = isMobile(navigator.userAgent);
-  var dpr = mobile ? 1 : window.devicePixelRatio || 1;
-  window.addEventListener("resize", canvasFit(canvas, null, dpr), false);
 
   // camera setup
   var fieldOfView = 1.22;
@@ -64,9 +59,23 @@ function init(meshes) {
 /* === UPDATE === */
 
 function update(time) {
-  // camera drawing position
-  // truck the camera back
-  // mat4.translate(camera.view, camera.view, vec3.fromValues(0, 1, -4));
+  // resize the canvas and the proj matrix if needed
+  if (
+    canvas.width != canvas.clientWidth ||
+    canvas.height != canvas.clientHeight
+  ) {
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    mat4.perspective(
+      camera.projection,
+      1.22,
+      canvas.clientWidth / canvas.clientHeight,
+      0.01,
+      100.0
+    );
+  }
+
+  // camera view matrix (position and direction)
   mat4.lookAt(
     camera.view,
     vec3.fromValues(-camera.distance, camera.distance, camera.distance),
@@ -74,12 +83,13 @@ function update(time) {
     vec3.fromValues(0, 1, 0)
   );
 
-  // TODO: keep it looking at the center of the scene
-
-  // cubeRotation += deltaTime;
-  // mat4.translate(modelViewMatrix, mat4.create(), [0.0, 0.0, -6.0]);
-  // mat4.rotate(modelViewMatrix, modelViewMatrix, cubeRotation, [0, 0, 1]);
-  // mat4.rotate(modelViewMatrix, modelViewMatrix, cubeRotation * 0.7, [0, 1, 0]);
+  // rotate model
+  mat4.rotate(
+    dragonObject.model,
+    mat4.create(),
+    time * 0.0001,
+    vec3.fromValues(-0.333, 1, 0.333)
+  );
 }
 
 /* === RENDER LOOP === */
@@ -135,10 +145,11 @@ function render(time) {
   renderObject(dragonObject);
 
   // render loop
-  // requestAnimationFrame(render);
+  requestAnimationFrame(render);
 }
 
 /* === START === */
 window.onload = function () {
   downloadMeshes({ dragon: "models/cube.obj" }, init);
+  // downloadMeshes({ dragon: "models/dragon.obj" }, init);
 };
