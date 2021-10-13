@@ -6,13 +6,26 @@ import vertShader from "./shaders/vert.glsl";
 import fragShader from "./shaders/frag.glsl";
 
 var gl, canvas, shader;
+var sphereObject;
 var dragonObject;
 var camera = {
+  fieldOfView: 1.22,
+  near: 0.01,
+  far: 100.0,
   // verticalAngle: 0.4,
   // horizontalAngle: 0.7,
   distance: 3.0,
   view: mat4.create(),
   projection: mat4.create(),
+  updatePerspective: function (aspectRatio) {
+    this.projection = mat4.perspective(
+      this.projection,
+      this.fieldOfView,
+      aspectRatio,
+      this.near,
+      this.far
+    );
+  },
 };
 
 /* === SETUP === */
@@ -30,6 +43,20 @@ function initObject(mesh) {
   return object;
 }
 
+function createSphere() {
+  var object = {};
+  object.model = mat4.create();
+
+  var vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  var vertices = [(0, 0), (0, 0)];
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+  var indexBuffer = gl.createBuffer();
+
+  return object;
+}
+
 function init(meshes) {
   // get a WebGL context
   canvas = document.getElementById("gl-canvas");
@@ -41,17 +68,15 @@ function init(meshes) {
   }
 
   // camera setup
-  var fieldOfView = 1.22;
   var aspectRatio = canvas.clientWidth / canvas.clientHeight;
-  var near = 0.01;
-  var far = 100.0;
-  mat4.perspective(camera.projection, fieldOfView, aspectRatio, near, far);
+  camera.updatePerspective(aspectRatio);
 
   // setup shaders
   shader = createShader(gl, vertShader, fragShader);
 
   // initialize objects
-  dragonObject = initObject(meshes.dragon);
+  // dragonObject = initObject(meshes.dragon);
+  sphereObject = createSphere();
 
   if (gl) requestAnimationFrame(render);
 }
@@ -66,16 +91,12 @@ function update(time) {
   ) {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
-    mat4.perspective(
-      camera.projection,
-      1.22,
-      canvas.clientWidth / canvas.clientHeight,
-      0.01,
-      100.0
-    );
+    var aspectRatio = canvas.clientWidth / canvas.clientHeight;
+    camera.updatePerspective(aspectRatio);
   }
 
   // camera view matrix (position and direction)
+  // TODO: put in camera model
   mat4.lookAt(
     camera.view,
     vec3.fromValues(-camera.distance, camera.distance, camera.distance),
@@ -83,13 +104,13 @@ function update(time) {
     vec3.fromValues(0, 1, 0)
   );
 
-  // rotate model
-  mat4.rotate(
-    dragonObject.model,
-    mat4.create(),
-    time * 0.0001,
-    vec3.fromValues(-0.333, 1, 0.333)
-  );
+  // // rotate model
+  // mat4.rotate(
+  //   dragonObject.model,
+  //   mat4.create(),
+  //   time * 0.0001,
+  //   vec3.fromValues(-0.333, 1, 0.333)
+  // );
 }
 
 /* === RENDER LOOP === */
@@ -142,7 +163,7 @@ function render(time) {
   gl.frontFace(gl.CCW);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  renderObject(dragonObject);
+  // renderObject(dragonObject);
 
   // render loop
   requestAnimationFrame(render);
@@ -150,6 +171,7 @@ function render(time) {
 
 /* === START === */
 window.onload = function () {
-  downloadMeshes({ dragon: "models/cube.obj" }, init);
+  init({});
+  // downloadMeshes({ dragon: "models/cube.obj" }, init);
   // downloadMeshes({ dragon: "models/dragon.obj" }, init);
 };
