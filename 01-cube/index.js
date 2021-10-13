@@ -1,1 +1,1 @@
-console.log("hello world");
+import * as twgl from "./web_modules/twgljs.js";

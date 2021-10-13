@@ -1,19 +1,18 @@
 {
-  "name": "01-cube",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "esinstall-demo",
   "scripts": {
-    "start": "snowpack dev",
-    "build": "snowpack build",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "snowpack": "^3.8.8"
+    "start": "browser-sync start --server --files=\"*.js\"",
+    "postinstall": "node install-modules.mjs"
   },
   "dependencies": {
     "twgl.js": "^4.21.2"
+  },
+  "devDependencies": {
+    "esinstall": "^1.1.7"
+  },
+  "esinstall": {
+    "install": [
+      "twgl.js"
+    ]
   }
 }

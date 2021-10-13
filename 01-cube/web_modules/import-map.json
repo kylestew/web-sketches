@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "twgl.js": "./twgljs.js"
+  }
+}
