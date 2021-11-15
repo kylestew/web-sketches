@@ -2,12 +2,17 @@
 
 in vec3 position;
 
-out vec2 pos;
+uniform float width;
+uniform float height;
+
+out vec2 uv;
 
 void main() {
-    // TODO: fix aspect ratio
-    pos = position.xy;
-    // vUV = vec2((position.x + 1.0) / 2.0, (position.y + 1.0) / 2.0);
-
+    // normalize coordinates so smaller side is [-1, 1]
+    float aspect = width / height;
+    if (aspect > 1.0)
+        uv = vec2(position.x * aspect, position.y);
+    else
+        uv = vec2(position.x, position.y / aspect);
     gl_Position = vec4(position, 1.0);
 }

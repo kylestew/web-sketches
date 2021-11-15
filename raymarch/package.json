@@ -12,6 +12,7 @@
   "dependencies": {
     "canvas-sketch": "^0.7.4",
     "primitive-quad": "^2.0.0",
-    "regl": "^2.1.0"
+    "regl": "^2.1.0",
+    "regl-camera": "^2.1.1"
   }
 }
