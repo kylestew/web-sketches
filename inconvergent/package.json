@@ -1,8 +1,8 @@
 {
-  "name": "iridescent",
+  "name": "inconvergent",
   "version": "1.0.0",
   "description": "",
-  "main": "sphere.js",
+  "main": "hyphae.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "canvas-sketch": "^0.7.4",
-    "three": "^0.134.0"
+    "canvas-sketch": "^0.7.4"
   }
 }
