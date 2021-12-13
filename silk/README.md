@@ -4,4 +4,6 @@ http://regl.party
 
 ## GLSL Workflow
 
-https://github.com/UstymUkhman/vite-plugin-glsl
+https://github.com/KusStar/vite-plugin-glslify
+
+https://github.com/hughsk/glsl-noise
