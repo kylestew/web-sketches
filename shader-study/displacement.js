@@ -1,12 +1,18 @@
+const canvasSketch = require("canvas-sketch");
+
 global.THREE = require("three");
 
-const canvasSketch = require("canvas-sketch");
-const vertShader = require("./shaders/sketch.vert");
-const fragShader = require("./shaders/sketch.frag");
+require("three/examples/js/postprocessing/EffectComposer.js");
+require("three/examples/js/postprocessing/RenderPass.js");
+require("three/examples/js/postprocessing/ShaderPass.js");
+require("three/examples/js/shaders/CopyShader.js");
+
+const vertShader = require("./shaders/blob.vert");
+const fragShader = require("./shaders/blob.frag");
 
 const settings = {
   context: "webgl",
-  dimensions: [512, 512],
+  dimensions: [720, 720],
   animate: true,
   attributes: { antialias: true },
 };
@@ -15,15 +21,17 @@ const sketch = ({ context }) => {
   const renderer = new THREE.WebGLRenderer({
     context,
   });
-  renderer.setClearColor("#fff", 1);
+  renderer.setClearColor("#000", 1);
+
+  const composer = new THREE.EffectComposer(renderer);
 
   const camera = new THREE.PerspectiveCamera(45, 1, 1, 1000);
-  camera.position.set(0, 0, 200);
+  camera.position.set(0, 0, 8);
   camera.lookAt(new THREE.Vector3());
 
   const scene = new THREE.Scene();
 
-  const geometry = new THREE.IcosahedronGeometry(64, 64);
+  const geometry = new THREE.IcosahedronGeometry(1, 64);
 
   const material = new THREE.ShaderMaterial({
     vertexShader: vertShader,
@@ -31,7 +39,7 @@ const sketch = ({ context }) => {
     uniforms: {
       time: {
         type: "f",
-        value: 1.23,
+        value: 0,
       },
     },
   });
