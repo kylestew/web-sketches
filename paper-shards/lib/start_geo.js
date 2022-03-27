@@ -6,8 +6,7 @@ const triQuadPoints = (size, top) => {
         [size, 0], // top right
         [0, size], // bottom left
       ],
-      strokeStyle: `#000000`,
-      depth: 1,
+      depth: 3,
     },
     {
       pts: [
@@ -15,8 +14,7 @@ const triQuadPoints = (size, top) => {
         [0, size], // bottom left
         [size, 0], // top right
       ],
-      strokeStyle: `#000000`,
-      depth: 1,
+      depth: 3,
     },
   ];
 };
