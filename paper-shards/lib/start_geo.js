@@ -6,7 +6,7 @@ const triQuadPoints = (size, top) => {
         [size, 0], // top right
         [0, size], // bottom left
       ],
-      depth: 3,
+      depth: 2,
     },
     {
       pts: [
@@ -14,7 +14,7 @@ const triQuadPoints = (size, top) => {
         [0, size], // bottom left
         [size, 0], // top right
       ],
-      depth: 3,
+      depth: 2,
     },
   ];
 };
